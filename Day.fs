@@ -4,7 +4,7 @@ open System
 
 // #nowarn "25"
 
-let text = IO.File.ReadAllText("Day0.txt")
+let text = IO.File.ReadAllText("Day06.txt")
 let lines = Text.RegularExpressions.Regex.Split(text, "\n(?=.)")
 
 
