@@ -3,7 +3,7 @@ open System.Text.RegularExpressions
 
 // #nowarn "25"
 
-let text = System.IO.File.ReadAllText("Day0.txt")
+let text = IO.File.ReadAllText("Day0.txt")
 let lines = Regex.Split(text, "\n(?=.)")
 
 [<EntryPoint>]
