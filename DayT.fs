@@ -1,17 +1,14 @@
-module Grotto
-
 open System
+open System.Text.RegularExpressions
 
 // #nowarn "25"
 
 let text = IO.File.ReadAllText("Day0.txt")
-let lines = Text.RegularExpressions.Regex.Split(text, "\n(?=.)")
-
-
+let lines = Regex.Split(text, "\n(?=.)")
 
 [<EntryPoint>]
 let main argv =
-    text
+    lines
     |> printfn "Part 1 %A"
 
     "?"
