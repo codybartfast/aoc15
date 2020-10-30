@@ -1,8 +1,6 @@
 open System
 open System.Text.RegularExpressions
 
-// #nowarn "25"
-
 let text = IO.File.ReadAllText("Day0.txt")
 let lines = Regex.Split(text, "\n(?=.)")
 
