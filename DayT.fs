@@ -1,7 +1,7 @@
 open System
 open System.Text.RegularExpressions
 
-let text = IO.File.ReadAllText("Day0.txt")
+let text = IO.File.ReadAllText("Day1.txt")
 let lines = Regex.Split(text, "\n(?=.)")
 
 [<EntryPoint>]
