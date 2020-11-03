@@ -1,62 +1,66 @@
 open System
 open System.Text.RegularExpressions
 
-let text = IO.File.ReadAllText("Day11.txt")
-let chars = text.ToCharArray();
-let last = chars.Length - 1
+#nowarn "25"
 
-let incchar = function
-    | 'h' -> 'j'
-    | 'k' -> 'm'
-    | 'n' -> 'p'
-    | 'z' -> 'a'
-    | c -> char ((int c) + 1)
+let text = IO.File.ReadAllText("Day12.txt")
+let chars = text.ToCharArray() |> List.ofArray
 
-let increment (pwd: char[]) =
-    let rec iter i =
-        if i < 0
-        then pwd
-        else
-            pwd.[i] <- incchar (pwd.[i])
-            if pwd.[i] = 'a'
-            then iter (i - 1)
-            else pwd
-    iter (pwd.Length - 1)
+type Val =
+    | Str of string
+    | Num of int
+    | Arr of Val[]
+    | Obj of (string * Val) list
 
-let valid (pwd: char[]) =
-    let rec run i =
-        if i > last then false else
-        if (int pwd.[i]) = (int pwd.[i - 1]) + 1
-            && (int pwd.[i]) = (int pwd.[i - 2]) + 2
-        then
-            true
-        else
-            run (i + 1)
-    let rec pairs i lstpair =
-        if i > last then false else
-        if (int pwd.[i]) = (int pwd.[i - 1])
-        then
-            match lstpair with
-            | None -> pairs (i + 2) (Some pwd.[i])
-            | Some prv when prv <> pwd.[i] -> true
-            | _ -> pairs (i + 2) lstpair
-        else
-            pairs (i + 1) lstpair
-    (run 2) && (pairs 1 None)
+let rec parse = function
+    | '{'::cs -> object cs []
+    | '"'::cs -> quoted cs []
+    | '['::cs -> array cs []
+    |  n::cs -> number cs [n]
 
-let rec search pwd =
-    let next = increment pwd
-    match valid next with
-    | true -> next
-    | false -> search next
+and object cs kvps : char list * Val =
+    let cs, Str key = quoted cs.Tail []
+    let cs = cs.Tail // skip :
+    let cs, value = parse cs
+    let kvps = (key, value)::kvps
+    match cs with
+    | ','::cs -> object cs kvps
+    | '}'::cs -> cs, kvps |> List.rev |> Obj
+
+and array cs items  =
+    let cs, value = parse cs
+    let items = value::items
+    match cs with
+    | ','::cs -> array cs items
+    | ']'::cs -> cs, (items |> Seq.rev |> Array.ofSeq |> Arr)
+
+and quoted cs txt =
+    match cs with
+    | '"'::cs -> (cs, txt |> List.rev |> Array.ofList |> String |> Str)
+    | c::cs -> quoted cs (c::txt)
+
+and number cs digits = 
+    match cs with
+    | c::cs when Char.IsNumber(c) -> number cs (c::digits)
+    | cs ->  cs, digits |> Seq.rev |> Array.ofSeq |> String |> int |> Num
+
+let rec sum = function
+    | Num num -> num
+    | Str _ -> 0
+    | Arr arr -> arr |> Array.sumBy sum
+    | Obj lst -> 
+        if lst |>  List.exists (function _, Str "red" -> true | _ -> false)
+        then 0
+        else lst |> List.sumBy (snd >> sum)
 
 [<EntryPoint>]
 let main argv =
-    search chars
-    |> String
+    Regex.Matches(text, @"-?\d+")
+    |> Seq.sumBy (fun m -> m.Value |> int)
     |> printfn "Part 1 %A"
 
-    search chars
-    |> String
-    |> printfn "Part 2 %A"
+    parse chars 
+    |> snd
+    |> sum
+    |> printfn "Part 2 %A"    
     0
