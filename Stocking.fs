@@ -19,13 +19,13 @@ let rec pairCombos = function
 
 let rec permutations list =
     // aoc15:13
-    let rec insertAlong i list =
+    let rec insAlong i list =
         match list with
         | [] -> [[i]]
-        | h::t -> (i::list)::(List.map (fun sub -> h::sub) (insertAlong i t))
+        | h::t -> (i::list)::(List.map (fun sub -> h::sub) (insAlong i t))
     match list with
     | [] -> [[]]
-    | head::tail -> List.collect (insertAlong head) (permutations tail)
+    | head::tail -> List.collect (insAlong head) (permutations tail)
 
 let mapToString (map:Map<(int * int), int64>) =
     // aoc18:20
