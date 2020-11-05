@@ -96,15 +96,15 @@ type Grid<'a when 'a : equality>(jagged: 'a[][]) =
         |> Grid<'a>
 
     member _.Corners() = [| (0, 0); (0, maxY); (maxX, maxY); (maxX, 0) |]
-    member this.Get((x, y)) = this.[x, y]
-    member this.Set((x, y)) value = this.[x, y] <- value
+    member this.Get (x, y) = this.[x, y]
+    member this.Set (x, y) value = this.[x, y] <- value
     member this.TryGet((x, y)) =
         match this.InBounds(x, y) with
         | true -> Some (this.Get((x, y)))
         | false -> None
 
 // type Thingy = Grid<char>
-
-// let toThingy =
-//     Array.map (fun (s: string) -> s.ToCharArray())
-//     >> Thingy
+// let thingy =
+//     lines
+//     |> Array.map (fun s -> s.ToCharArray())
+//     |> Thingy
