@@ -2,7 +2,7 @@ open System
 open System.Text.RegularExpressions
 
 let text = IO.File.ReadAllText("Day1.txt")
-let lines = Regex.Split(text, "\n(?=.)")
+let lines = text.Split([|'\r'; '\n'|], StringSplitOptions.RemoveEmptyEntries)
 
 [<EntryPoint>]
 let main argv =
