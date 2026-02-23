@@ -62,6 +62,7 @@ let fabricate molecule source maxtrials =
 
 [<EntryPoint>]
 let main argv =
+    printfn "%O" replmap
     medicine
     |> allchildren
     |> Seq.distinct
