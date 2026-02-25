@@ -6,4 +6,4 @@ Launched in 2020, this was my first Advent 2015 campaign.
 
 
 [Primary Source](https://git.sr.ht/~codybartfast/aoc-2015-fs)  
-[Other Events](https://sr.ht/~codybartfast/aoc/sources)
+[Other Campaigns](https://sr.ht/~codybartfast/aoc/sources)
